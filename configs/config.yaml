@@ -1,0 +1,5 @@
+personal:
+  name: "kyle"
+  study: "gogo"
+server:
+  port: ":3000"
