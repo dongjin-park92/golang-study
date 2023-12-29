@@ -20,7 +20,7 @@ func response(server echo.Context, status, errorcode int, message string, data .
 		StatusCode:    status,
 		ErrorCode:     errorcode,
 		ResultMessage: message,
-		ResultData:    data,
+		ResultData:    data[0],
 	}
 	return server.JSON(status, response)
 }
