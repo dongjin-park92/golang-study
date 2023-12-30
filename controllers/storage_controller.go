@@ -20,7 +20,11 @@ func NewStorageController(storageService *services.StorageService) *StorageContr
 }
 
 func (s StorageController) CheckFiles(server echo.Context) error {
-	name := server.QueryParam("name")
-	message := fmt.Sprintf("%s is checked", name)
+	bucket := server.Param("bucket")
+	err := s.storageService.GetObjectExist(server.Request().Context(), bucket)
+	if err != nil {
+		response(server, http.StatusInternalServerError, 600, "failure", err)
+	}
+	message := fmt.Sprintf("%s is checked", bucket)
 	return response(server, http.StatusOK, 0, "success", message)
 }

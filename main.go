@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"golang-go/configs"
+	"golang-go/loggers"
 	"golang-go/routers"
 
 	"github.com/labstack/echo/v4"
@@ -30,6 +31,8 @@ func startServer(conf *configs.ViperConfig) {
 	// 기본적인 Echo Framwork Instance 생성
 	server := echo.New()
 	server.Logger.SetLevel(log.INFO)
+	loggers.InitLogger(server)
+
 	// Echo Framwork에 대한 Middleware 설정
 	// Logger, Recover(PANIC 복구)를 기본으로 사용
 	server.Use(middleware.Logger())
@@ -39,6 +42,7 @@ func startServer(conf *configs.ViperConfig) {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.POST, echo.GET},
 	}))
+
 	// Echo Framwork의 기본 Banner를 삭제하고, Custom Banner 출력
 	server.HideBanner = true
 	fmt.Println(banner)

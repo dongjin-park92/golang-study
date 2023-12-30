@@ -7,6 +7,7 @@ import (
 	"golang-go/services"
 
 	"github.com/labstack/echo/v4"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type ControllerFactory struct {
@@ -27,10 +28,13 @@ func (f ControllerFactory) CreateStorageController() controllers.StorageControll
 func InitRoute(server *echo.Echo) {
 	server.GET("/healthz", controllers.Healthcheck)
 	initv1(server, NewControllerFactory())
+	// Echo framwork에서 metrics 노출하기 위함
+	server.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
+
 }
 
 func initv1(server *echo.Echo, factory *ControllerFactory) {
 	v1 := server.Group("/v1")
 	storageController := factory.CreateStorageController()
-	v1.GET("/users/:name/files", storageController.CheckFiles)
+	v1.GET("/storage/:bucket/files", storageController.CheckFiles)
 }
